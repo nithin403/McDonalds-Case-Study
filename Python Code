@@ -1,1 +1,116 @@
+# Replication of McDonalds Case Study in Python
+
+# Load the dataset into a DataFrame
+import pandas as pd
+​data = pd.read_csv('C:/Users/nithi/Downloads/mcdonalds.csv')
+​
+​# Display the first few rows of the DataFrame
+print(data.head())
+​
+​
+  yummy convenient spicy fattening greasy fast cheap tasty expensive healthy  \
+0    No        Yes    No       Yes     No  Yes   Yes    No       Yes      No   
+1   Yes        Yes    No       Yes    Yes  Yes   Yes   Yes       Yes      No   
+2    No        Yes   Yes       Yes    Yes  Yes    No   Yes       Yes     Yes   
+3   Yes        Yes    No       Yes    Yes  Yes   Yes   Yes        No      No   
+4    No        Yes    No       Yes    Yes  Yes   Yes    No        No     Yes   
+
+  disgusting Like  Age      VisitFrequency  Gender  
+0         No   -3   61  Every three months  Female  
+1         No   +2   51  Every three months  Female  
+2         No   +1   62  Every three months  Female  
+3        Yes   +4   69         Once a week  Female  
+4         No   +2   49        Once a month    Male  
+
+# Check for missing values
+print("\nMissing values:\n", data.isnull().sum())
+​
+# Remove duplicates if any
+data.drop_duplicates(inplace=True)
+​
+# Convert 'Age' column to numeric
+data['Age'] = pd.to_numeric(data['Age'], errors='coerce')
+​
+​
+
+Missing values:
+ yummy             0
+convenient        0
+spicy             0
+fattening         0
+greasy            0
+fast              0
+cheap             0
+tasty             0
+expensive         0
+healthy           0
+disgusting        0
+Like              0
+Age               0
+VisitFrequency    0
+Gender            0
+dtype: int64
+
+##Code will convert the categorical columns into numerical values using one-hot encoding, and the correlation calculation should work without errors.
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+​
+# Load the dataset into a DataFrame
+data = pd.read_csv('C:/Users/nithi/Downloads/mcdonalds.csv')
+​
+# Clean the data
+# Convert 'Age' to numeric
+data['Age'] = pd.to_numeric(data['Age'], errors='coerce')
+​
+# Convert 'Like' to numeric
+data['Like'] = data['Like'].apply(lambda x: int(x) if x.isdigit() else 0)
+​
+# Convert 'VisitFrequency' to numeric based on the assumption of frequency
+freq_mapping = {
+    'Every three months': 4,
+    'Once a week': 52,
+    'Once a month': 12
+}
+data['VisitFrequency'] = data['VisitFrequency'].map(freq_mapping)
+​
+# Convert other categorical columns to one-hot encoding
+categorical_cols = ['yummy', 'convenient', 'spicy', 'fattening', 'greasy', 'fast', 'cheap', 'tasty', 'expensive', 'healthy', 'disgusting', 'Gender']
+data = pd.get_dummies(data, columns=categorical_cols, drop_first=True)
+​
+# Correlation Matrix
+correlation_matrix = data.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Matrix')
+plt.show()
+​
+
+# Perform EDA
+print("\nSummary statistics:\n", data.describe())
+​
+import matplotlib.pyplot as plt
+import seaborn as sns
+​
+​
+
+Summary statistics:
+          Like          Age  VisitFrequency
+count  1453.0  1453.000000     1016.000000
+mean      0.0    44.604955       18.559055
+std       0.0    14.221178       18.680051
+min       0.0    18.000000        4.000000
+25%       0.0    33.000000        4.000000
+50%       0.0    45.000000       12.000000
+75%       0.0    57.000000       12.000000
+max       0.0    71.000000       52.000000
+# Example visualization: Distribution of 'tasty' ratings
+sns.histplot(data['tasty'], bins=10)
+plt.xlabel('Tasty Rating')
+plt.ylabel('Frequency')
+plt.title('Distribution of Tasty Ratings')
+plt.show()
+​
+​
+
+​
 
